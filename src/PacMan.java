@@ -67,8 +67,10 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     };
 
     // Game objects (this stage: pacman + ghosts only)
-    private HashSet<Block> ghosts;
-    private Block pacman;
+    HashSet<Block> walls;
+    HashSet<Block> foods;
+    HashSet<Block> ghosts;
+    Block pacman;
 
     // Repaint timer
     private Timer timer;
@@ -112,23 +114,45 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         return new ImageIcon(url).getImage();
     }
 
-    /** Parse the tile map and create actors. */
-    private void loadMap() {
-        ghosts = new HashSet<>();
-        for (int r = 0; r < rowCount; r++) {
-            String row = tileMap[r];
-            for (int c = 0; c < columnCount; c++) {
-                char ch = row.charAt(c);
-                int x = c * tileSize;
-                int y = r * tileSize;
+    public void loadMap() {
+        walls = new HashSet<Block>();
+        foods = new HashSet<Block>();
+        ghosts = new HashSet<Block>();
 
-                switch (ch) {
-                    case 'b' -> ghosts.add(new Block(blueGhostImage,   x, y, tileSize, tileSize));
-                    case 'o' -> ghosts.add(new Block(orangeGhostImage, x, y, tileSize, tileSize));
-                    case 'p' -> ghosts.add(new Block(pinkGhostImage,   x, y, tileSize, tileSize));
-                    case 'r' -> ghosts.add(new Block(redGhostImage,    x, y, tileSize, tileSize));
-                    case 'P' -> pacman = new Block(pacmanRightImage, x, y, tileSize, tileSize);
-                    default  -> {} // ignore for this stage
+        for (int r = 0; r < rowCount; r++) {
+            for (int c = 0; c < columnCount; c++) {
+                String row = tileMap[r];
+                char tileMapChar = row.charAt(c);
+
+                int x = c*tileSize;
+                int y = r*tileSize;
+
+                if (tileMapChar == 'X') { //block wall
+                    Block wall = new Block(wallImage, x, y, tileSize, tileSize);
+                    walls.add(wall);
+                }
+                else if (tileMapChar == 'b') { //blue ghost
+                    Block ghost = new Block(blueGhostImage, x, y, tileSize, tileSize);
+                    ghosts.add(ghost);
+                }
+                else if (tileMapChar == 'o') { //orange ghost
+                    Block ghost = new Block(orangeGhostImage, x, y, tileSize, tileSize);
+                    ghosts.add(ghost);
+                }
+                else if (tileMapChar == 'p') { //pink ghost
+                    Block ghost = new Block(pinkGhostImage, x, y, tileSize, tileSize);
+                    ghosts.add(ghost);
+                }
+                else if (tileMapChar == 'r') { //red ghost
+                    Block ghost = new Block(redGhostImage, x, y, tileSize, tileSize);
+                    ghosts.add(ghost);
+                }
+                else if (tileMapChar == 'P') { //pacman
+                    pacman = new Block(pacmanRightImage, x, y, tileSize, tileSize);
+                }
+                else if (tileMapChar == ' ') { //food
+                    Block food = new Block(null, x + 14, y + 14, 4, 4);
+                    foods.add(food);
                 }
             }
         }
@@ -149,13 +173,19 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
 
     /** Draw only pacman and ghosts (no walls/food yet). */
     private void draw(Graphics g) {
-        if (pacman != null) {
-            g.drawImage(pacman.image, pacman.x, pacman.y, pacman.width, pacman.height, null);
+        g.drawImage(pacman.image, pacman.x, pacman.y, pacman.width, pacman.height, null);
+
+        for(Block ghost : ghosts){
+            g.drawImage(ghost.image, ghost.x, ghost.y, ghost.width, ghost.height, null);
         }
-        if (ghosts != null) {
-            for (Block gh : ghosts) {
-                g.drawImage(gh.image, gh.x, gh.y, gh.width, gh.height, null);
-            }
+
+        for(Block wall : walls){
+            g.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height, null);
+        }
+
+        g.setColor(Color.WHITE);
+        for(Block food : foods){
+            g.fillRect(food.x, food.y, food.width, food.height);
         }
     }
 
