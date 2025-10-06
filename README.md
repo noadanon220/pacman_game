@@ -1,6 +1,6 @@
 # Pac-Man Game in Java
 
-![Pac-Man Logo](assets/pacman_logo.png)
+![pacMan_logo](res/pacman_logo.png)
 
 This is a classic Pac-Man game implementation created from scratch using **Java** and the **Swing** graphics library.
 
