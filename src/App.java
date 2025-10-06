@@ -2,21 +2,24 @@ import javax.swing.JFrame;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        int rowCount = 21;
+        int columnCount = 19;
+        int tileSize = 32;
+        int boardWidth = columnCount * tileSize;
+        int boardHeight = rowCount * tileSize;
+
         JFrame frame = new JFrame("Pac Man");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // frame.setVisible(true);
+        frame.setSize(boardWidth, boardHeight);
+        frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         PacMan pacmanGame = new PacMan();
         frame.add(pacmanGame);
-
-        // pack() must be called after adding components
         frame.pack();
-
-        // This line is crucial for keyboard input and can help with drawing
         pacmanGame.requestFocus();
-
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
 
+    }
 }
