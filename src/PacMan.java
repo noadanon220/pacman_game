@@ -3,13 +3,17 @@ import java.awt.event.*;
 import java.util.HashSet;
 import javax.swing.*;
 
-/** Basic Pac-Man board that draws Pac-Man and ghosts. */
 public class PacMan extends JPanel implements ActionListener, KeyListener {
 
-    /** Small renderable block (sprite + rect). */
     class Block {
-        int x, y, width, height;
+        int x;
+        int y;
+        int width;
+        int height;
         Image image;
+
+        int startX;
+        int startY;
 
         Block(Image image, int x, int y, int width, int height) {
             this.image = image;
@@ -17,6 +21,8 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             this.y = y;
             this.width = width;
             this.height = height;
+            this.startX = x;
+            this.startY = y;
         }
     }
 
@@ -34,10 +40,12 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     private Image pinkGhostImage;
     private Image redGhostImage;
 
+
     private Image pacmanUpImage;
     private Image pacmanDownImage;
     private Image pacmanLeftImage;
     private Image pacmanRightImage;
+
 
     // Map legend:
     // X = wall, O = skip, P = pacman, ' ' = food
@@ -66,22 +74,18 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             "XXXXXXXXXXXXXXXXXXX"
     };
 
-    // Game objects (this stage: pacman + ghosts only)
+    // Game objects
     HashSet<Block> walls;
     HashSet<Block> foods;
     HashSet<Block> ghosts;
     Block pacman;
 
     // Repaint timer
-    private Timer timer;
+    Timer gameLoop;
 
-    public PacMan() {
-        // Panel setup
+    public PacMan() { //constructor
         setPreferredSize(new Dimension(boardWidth, boardHeight));
         setBackground(Color.BLACK);
-        setDoubleBuffered(true);
-
-        // Keyboard focus
         addKeyListener(this);
         setFocusable(true);
 
@@ -99,10 +103,8 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
 
         // Build objects from map
         loadMap();
-
-        // 10 FPS is fine for now; adjust later for movement/animation
-        timer = new Timer(100, this);
-        timer.start();
+        gameLoop = new Timer(50, this); // 20fps (1000/50)
+        gameLoop.start();
     }
 
     /** Helper to load an image from classpath; throws clear error if missing. */
@@ -197,5 +199,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     // KeyListener stubs (future movement)
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyPressed(KeyEvent e) {}
-    @Override public void keyReleased(KeyEvent e) {}
+    @Override public void keyReleased(KeyEvent e) {
+        System.out.println("KeyCode: " + e.getKeyCode());
+    }
 }
