@@ -1,7 +1,6 @@
 # Pac-Man Game in Java
 
-![pacMan_logo](res/pacman_logo.png)
-
+<img src="res/pacman_logo.png" alt="Pac-Man Logo" width="400"/>
 This is a classic Pac-Man game implementation created from scratch using **Java** and the **Swing** graphics library.
 
 ## 🕹️ Features
